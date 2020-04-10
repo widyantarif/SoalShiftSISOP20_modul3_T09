@@ -84,4 +84,12 @@ int main() {
 }
 ```
 
-
+- ```int matA[4][2] = { {4, 2}, {2, 1}, {1, 3}, {3, 2} };``` 
+  adalah fungsi untuk mendeklarasikan variabel untuk Matriks A yang ber-ordo 4x2
+- ```int matB[2][5] = { {1, 2, 1, 2, 1}, {1, 5, 1, 3, 1} };```
+  adalah fungsi untuk mendeklarasikan variabel untuk Matriks B yang ber-ordo 2x5
+- ```int matC[4][5];``` 
+  adalah fungsi untuk mendeklarasikan ordo Matriks C yaitu 4x5
+  
+-  ```struct args { int i; int j }; ``` 
+  adalah fungsi membuat struct argumen atau kumpulan variabel argumen. ```int i``` berguna untuk menunjukkan baris dalam matriks    sedangkan ```int j``` berguna untuk menunjukkan kolom dalam matriks. 
