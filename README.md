@@ -174,5 +174,5 @@ key_t key = 1337;
 - berikut adalah fungsi untuk melakukan shared memory. Shared memory adalah memori yang dapat diakses secara bersamaan oleh beberapa program  dengan maksud untuk menyediakan komunikasi di antara mereka atau menghindari salinan yang berlebihan. ```key_t key = 1337;``` memiliki arti yaitu membuat Shared Memory ID dengan key yaitu 1337. 
 
 - fungsi ```int shmid = shmget(key, sizeof(matC), IPC_CREAT | 0666);``` memiliki arti yaitu akan membuat Shared Memori shmid dengan ukuran sesuai dengan Matriks C dengan private key dan pada memori berbagi atau Shared Memori menggunakan kode 0666 yang berarti mengizinkan adanya read and write dalam penggunaannya. 
-- 
+- fungsi ```value= shmat(shmid, NULL, 0);``` memiliki arti ```shmat``` adalah melampirkan segmen Shared Memori yang terkait dengan Shared Memory ID, shmid ke segmen data dari proses panggilan. 
 
