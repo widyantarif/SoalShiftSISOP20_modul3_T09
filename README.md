@@ -161,4 +161,18 @@ for (int i = 0; i < 4; i++)
 ``` 
 - adalah fungsi untuk menampilkan hasil perkalian matriks. Yaitu hasil perkalian Matriks A dengan Matriks B yang akan menjadi Matriks C yang memiliki ordo [4x5]
 
+```
+key_t key = 1337;
+  int *value;
+  int shmid = shmget(key, sizeof(matC), IPC_CREAT | 0666);
+  value = shmat(shmid, NULL, 0);
+
+  int* p = (int *)value;
+  memcpy(p, matC, 80);
+  shmdt(value);
+```
+- berikut adalah fungsi untuk melakukan shared memory. Shared memory adalah memori yang dapat diakses secara bersamaan oleh beberapa program  dengan maksud untuk menyediakan komunikasi di antara mereka atau menghindari salinan yang berlebihan. ```key_t key = 1337;``` memiliki arti yaitu membuat Shared Memory ID dengan key yaitu 1337. 
+
+- fungsi ```int shmid = shmget(key, sizeof(matC), IPC_CREAT | 0666);``` memiliki arti yaitu akan membuat Shared Memori shmid dengan ukuran sesuai dengan Matriks C dengan private key dan pada memori berbagi atau Shared Memori menggunakan kode 0666 yang berarti mengizinkan adanya read and write dalam penggunaannya. 
+- 
 
