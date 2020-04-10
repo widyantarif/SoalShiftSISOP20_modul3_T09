@@ -108,4 +108,56 @@ int main() {
 - Adalah fungsi looping untuk perkalian matriks A dan B. ```matC[i][j] += matA[i][k] * matB[k][j]``` 
 memiliki arti yaitu: Perkalian Matriks A ber-ordo [4x2] dengan Matriks B ber-ordo [2x5] akan menghasilkan sebuah Matriks C ber-ordo [4x5]. 
 
-  
+```
+int main() {
+pthread_t tid[4][5];
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      struct args *index = (struct args *)malloc(sizeof(struct args));
+      index->i = i;
+      index->j = j;
+```
+- ```pthread_t tid[4][5];``` adalah fungsi main yang berfungsi untuk menunjukkan array dari thread bernama tid yang memiliki ukuran 4x5 (sesuai dengan hasil perkalian) 
+
+```
+for (int i = 0; i < 4; i++) 
+{for (int j = 0; j < 5; j++) {
+``` 
+- berfungsi sebagai sistem looping untuk setiap thread yang akan dibuat. 
+
+
+``` 
+      struct args *index = (struct args *)malloc(sizeof(struct args));
+      index->i = i;
+      index->j = j;
+```
+- fungsi  ```struct args *index = (struct args *)malloc(sizeof(struct args));``` memiliki arti yaitu akan membuat sebuah nilai/objek bernama struct args (argumen) serta index dan akan mengalokasikan memori sesuai dengan struct ags. 
+- fungsi ```index->i = i;``` dan ```index->j = j;``` memiliki arti yaitu akan mengatur nilai pada objek dari struct ags bernama index dan bernilai i dan j. 
+
+```
+  pthread_create(&tid[i][j], NULL, &kali, (void *)index)
+  }
+  }
+
+  for (int i = 0; i < 4; i++) { //gabungin threadnya
+
+    for (int j = 0; j < 5; j++) {
+      pthread_join(tid[i][j], NULL);
+    }
+  }
+```
+
+- fungsi ```pthread_create(&tid[i][j], NULL, &kali, (void *)index)``` memiliki arti yaitu untuk membuat thread tid pada nilai i dan nilai j dengan menggunakan fungsi kali dan parameter index. 
+- fungsi ```pthread_join(tid[i][j], NULL);``` memiliki arti yaitu untuk menggabungkan semua thread yang telah dibuat. 
+
+``` printf("Matriks :\n");
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 5; j++) {
+        printf("%4d", matC[i][j]);
+      }
+    printf("\n");
+    }
+``` 
+- adalah fungsi untuk menampilkan hasil perkalian matriks. Yaitu hasil perkalian Matriks A dengan Matriks B yang akan menjadi Matriks C yang memiliki ordo [4x5]
+
+
