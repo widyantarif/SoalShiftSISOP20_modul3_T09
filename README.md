@@ -93,3 +93,19 @@ int main() {
   
 -  ```struct args { int i; int j }; ``` 
   adalah fungsi membuat struct argumen atau kumpulan variabel argumen. ```int i``` berguna untuk menunjukkan baris dalam matriks    sedangkan ```int j``` berguna untuk menunjukkan kolom dalam matriks. 
+  
+  ``` 
+   void kali*(void arg) {
+   int i = ((struct args*)arg)->i;
+   int j = ((struct args*)arg)->j;
+  ```
+- Adalah fungsi untuk memanggil perkalian untuk struct yang sudah dideklarasikan diatas.
+
+  ```
+  for (int k = 0; k < 2; k++) { 
+    matC[i][j] += matA[i][k] * matB[k][j]; 
+  }
+- Adalah fungsi looping untuk perkalian matriks A dan B. ```matC[i][j] += matA[i][k] * matB[k][j]``` 
+memiliki arti yaitu: Perkalian Matriks A ber-ordo [4x2] dengan Matriks B ber-ordo [2x5] akan menghasilkan sebuah Matriks C ber-ordo [4x5]. 
+
+  
