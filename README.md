@@ -400,3 +400,14 @@ pid = fork();
 - command ```close(fd[1]);```memiliki fungsi close dan menwrite hasil output.
 - command ```char *argv[] = {"wc", "-l", NULL};``` memiliki fungsi untuk Word Count yaitu menampilkan jumlah file yang ada didalam directory. 
 - command ```execv("/usr/bin/wc", argv);``` memiliki fungsi Word Count akan membaca per baris, dan mengeluarkan output bernilai angka dan menampilkan jumlah file yang ada didalam directory. 
+
+
+
+
+
+## KELUHAN:
+
+- kok makin lama makin susah ni soal sisop. Ya Allah 
+- keringanan dong mas mas. udah kuliah daring, soalnya susah. monangis aja akutu:((( 
+- maaf ya mas mengeluh. baru pertama ngeluh ni:(
+
