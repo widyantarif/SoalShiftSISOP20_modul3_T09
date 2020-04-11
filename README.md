@@ -217,5 +217,34 @@ int main() {
 ```
 int main() {
 int fd[2];
+pid_t pid;
+pipe(fd);
 ```
 - Memiliki arti yaitu untuk inisiasi fungsi main. ```int fd[2]``` berfungsi untuk inisiasi bahwa dalam proses ini akan membutuhkan 2 file descriptor. 
+- ```pid_t pid``` adalah inisiasi proses ID yang bernama pid. proses id ini berfungsi untuk mengalokasikan setiap proses saat dibuat. 
+- ```pipe(fd);``` adalah fungsi yang menjelaskan bpipes hanya memiliki 2 ujung yaitu ujung 1 dan 0. 1 untuk write sedangkan 0 untuk read. sesuai dengan file descriptornya. 
+
+```
+pid = fork();
+  if (pid == 0) {
+    dup2(fd[1], 1);
+    close(fd[0]);
+    char *argv[] = {"ls", NULL};
+    execv("/bin/ls", argv);
+  }
+  while(wait(NULL) > 0);
+
+  dup2(fd[0], 0);
+  close(fd[1]);
+  char *argv[] = {"wc", "-l", NULL};
+  execv("/usr/bin/wc", argv);
+
+}
+```
+- command ```dup2(fd[1], 1);``` memiliki fungsi untuk mencopy hasil output. 
+- command ```close(fd[0]);``` memilliki fungsi untuk menclose dan menread hasil output.
+- command ```execv("/bin/ls", argv);``` memiliki fungsi untuk menampilkan hasil read dari semua file yang ada didalam directory. 
+- command ```dup2(fd[0], 0);``` memiliki fungsi untuk mencopy hasil output dari nilai pipes yang dimasukkan. 
+- command ```close(fd[1]);```memiliki fungsi close dan menwrite hasil output.
+- command ```char *argv[] = {"wc", "-l", NULL};``` memiliki fungsi untuk Word Count yaitu menampilkan jumlah file yang ada didalam directory. 
+- command ```execv("/usr/bin/wc", argv);``` memiliki fungsi Word Count akan membaca per baris, dan mengeluarkan output bernilai angka dan menampilkan jumlah file yang ada didalam directory. 
