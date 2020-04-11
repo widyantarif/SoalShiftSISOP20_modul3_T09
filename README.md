@@ -176,6 +176,158 @@ key_t key = 1337;
 - fungsi ```int shmid = shmget(key, sizeof(matC), IPC_CREAT | 0666);``` memiliki arti yaitu akan membuat Shared Memori shmid dengan ukuran sesuai dengan Matriks C dengan private key dan pada memori berbagi atau Shared Memori menggunakan kode 0666 yang berarti mengizinkan adanya read and write dalam penggunaannya. 
 - fungsi ```value= shmat(shmid, NULL, 0);``` memiliki arti ```shmat``` adalah melampirkan segmen Shared Memori yang terkait dengan Shared Memory ID, shmid ke segmen data dari proses panggilan. 
 
+## Soal 4b
+  - Membuat program yang dapat mengetahui hasil faktorial dari matriks hasil perkalian yang telah didapatkan pada program soal 4A. 
+  - Menggunakan thread dan shared memory
+  
+## Penyelesaian
+Source Code: 
+```
+#include <stdio.h>
+#include <pthread.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+int matrix[4][5];
+long hasil[4][5];
+
+struct args {
+  int i;
+  int j;
+};
+
+void *factorial(void* arg) {
+  int i = ((struct args*)arg)->i;
+  int j = ((struct args*)arg)->j;
+  long hasilEl = 1;
+  for (int n = 1; n <= matrix[i][j]; n++) hasilEl += (long)n;
+  hasil[i][j] = hasilEl;
+}
+
+int main() {
+  key_t key = 1337;
+  int *value;
+  int shmid = shmget(key, 80, IPC_CREAT | 0666);
+  value = shmat(shmid, NULL, 0);
+
+  int* p = (int *)value;
+  memcpy(matrix, p, 80);
+
+  shmdt(value);
+  shmctl(shmid, IPC_RMID, NULL);
+
+  pthread_t tid[4][5];
+
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      struct args *index = (struct args *)malloc(sizeof(struct args));
+      index->i = i;
+      index->j = j;
+      pthread_create(&tid[i][j], NULL, &factorial, (void *)index);
+    }
+  }
+
+
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      pthread_join(tid[i][j], NULL);
+    }
+  }
+
+  printf("Matriks :\n");
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      printf("%20ld", hasil[i][j]);
+    }
+    printf("\n");
+  }
+
+}
+```
+
+```
+int matrix[4][5];
+long hasil[4][5];
+```
+- inisiasi matriks sesuai dengan soal 4a ```int matrix[4][5]```. inisiasi matrix yang akan menampilkan hasil faktorial ```long hasil[4][5]```
+
+```
+struct args { 
+int i; 
+int j }; 
+``` 
+ - Adalah fungsi membuat struct argumen atau kumpulan variabel argumen. ```int i``` berguna untuk menunjukkan baris dalam matriks    sedangkan ```int j``` berguna untuk menunjukkan kolom dalam matriks.
+
+```
+void *factorial(void* arg) {
+  int i = ((struct args*)arg)->i;
+  int j = ((struct args*)arg)->j;
+  long hasilEl = 1;
+  for (int n = 1; n <= matrix[i][j]; n++) hasilEl += (long)n;
+  hasil[i][j] = hasilEl;
+}
+```
+- Adalah fungsi untuk memanggil fungsi mencari faktorial untuk struct yang sudah dideklarasikan diatas.
+
+```
+int main() {
+  key_t key = 1337;
+  int *value;
+  int shmid = shmget(key, 80, IPC_CREAT | 0666);
+  value = shmat(shmid, NULL, 0);
+  ```
+- berikut adalah fungsi untuk melakukan shared memory. Shared memory adalah memori yang dapat diakses secara bersamaan oleh beberapa program  dengan maksud untuk menyediakan komunikasi di antara mereka atau menghindari salinan yang berlebihan. ```key_t key = 1337;``` memiliki arti yaitu membuat Shared Memory ID dengan key yaitu 1337. 
+
+- fungsi ```int shmid = shmget(key, 80, IPC_CREAT | 0666);``` memiliki arti yaitu akan membuat Shared Memori shmid dengan ukuran sesuai dengan dengan private key dan pada memori berbagi atau Shared Memori menggunakan kode 0666 yang berarti mengizinkan adanya read and write dalam penggunaannya. 
+- fungsi ```value= shmat(shmid, NULL, 0);``` memiliki arti ```shmat``` adalah melampirkan segmen Shared Memori yang terkait dengan Shared Memory ID, shmid ke segmen data dari proses panggilan. 
+
+```
+pthread_t tid[4][5];
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      struct args *index = (struct args *)malloc(sizeof(struct args));
+      index->i = i;
+      index->j = j;
+      pthread_create(&tid[i][j], NULL, &factorial, (void *)index);
+      }
+      }
+ 
+      for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      pthread_join(tid[i][j], NULL);
+```
+
+- ```pthread_t tid[4][5];``` adalah fungsi main yang berfungsi untuk menunjukkan array dari thread bernama tid yang memiliki ukuran 4x5 (sesuai dengan hasil perkalian) 
+
+```
+for (int i = 0; i < 4; i++) 
+{for (int j = 0; j < 5; j++) {
+``` 
+- berfungsi sebagai sistem looping untuk setiap thread yang akan dibuat. 
+
+``` 
+      struct args *index = (struct args *)malloc(sizeof(struct args));
+      index->i = i;
+      index->j = j;
+```
+- fungsi  ```struct args *index = (struct args *)malloc(sizeof(struct args));``` memiliki arti yaitu akan membuat sebuah nilai/objek bernama struct args (argumen) serta index dan akan mengalokasikan memori sesuai dengan struct ags. 
+- fungsi ```index->i = i;``` dan ```index->j = j;``` memiliki arti yaitu akan mengatur nilai pada objek dari struct ags bernama index dan bernilai i dan j. 
+- fungsi ```pthread_create(&tid[i][j], NULL, &factorial, (void *)index);``` memiliki arti yaitu untuk membuat thread tid pada nilai i dan nilai j dengan menggunakan fungsi kali dan parameter index. 
+- fungsi ```pthread_join(tid[i][j], NULL);``` memiliki arti yaitu untuk menggabungkan semua thread yang telah dibuat. 
+
+```
+printf("Matriks :\n");
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 5; j++) {
+      printf("%20ld", hasil[i][j]);
+    }
+    printf("\n");
+```
+- berfungsi untuk menampilkan hasil faktorial dari hasil perkalian matriks 4a. 
+
 
 ## Soal 4c
   - Membuat suatu program menggunakan IPC Pipes untuk mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l"
